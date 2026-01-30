@@ -66,8 +66,7 @@ class CriticNetwork(tf.keras.Model):
         self.s_bn1 = tf.keras.layers.BatchNormalization(name="s_bn1")
         self.s_act1 = tf.keras.layers.ReLU(name="s_relu1")
 
-        # TF1 used: matmul(state, t1.W) + matmul(action, t2.W) + t2.b
-        # -> state transform WITHOUT bias, action transform WITH bias
+
         self.s_fc2_lin = tf.keras.layers.Dense(LAYER2, use_bias=False, name="s_fc2_lin")
         self.a_fc2_lin = tf.keras.layers.Dense(LAYER2, use_bias=True, name="a_fc2_lin")
         self.s_act2 = tf.keras.layers.ReLU(name="relu2")

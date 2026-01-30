@@ -135,7 +135,7 @@ class DDPGAgent:
 
         self.tau = tf.constant(float(train_config['tau']), dtype=tf.float32)
         self.gamma = tf.constant(float(train_config['gamma']), dtype=tf.float32)
-        self.is_training = bool(train_config.get("is_training", False))  # BN training flag
+        self.is_training = bool(train_config.get("is_training", False))  
 
         actor_lr = float(train_config['actor_lr'])
         critic_lr = float(train_config['critic_lr'])
@@ -163,7 +163,7 @@ class DDPGAgent:
         self.replay_buffer = ReplayBuffer(int(train_config['buffer_size']), int(train_config['random_seed']))
         self.actor_noise = OrnsteinUhlenbeckActionNoise(mu=np.zeros(self.action_dim, dtype=np.float32), sigma=self.noise_sigma)
 
-        # ===== Compile fast training steps =====
+       
         bs = self.minibatch_size
         s_sig = tf.TensorSpec(shape=(bs, self.state_dim), dtype=tf.float32)
         a_sig = tf.TensorSpec(shape=(bs, self.action_dim), dtype=tf.float32)
@@ -211,7 +211,7 @@ class DDPGAgent:
             critic_grads = tape_c.gradient(critic_loss, self.critic.trainable_variables)
             self.critic_opt.apply_gradients(zip(critic_grads, self.critic.trainable_variables))
 
-            # --- Actor update (maximize Q(s, mu(s))) ---
+            
             with tf.GradientTape() as tape_a:
                 a_pred = self.actor(s, training=self.is_training)
                 q_pred = self.critic(s, a_pred, training=False)
@@ -291,7 +291,7 @@ class DDPGAgent:
 
         return None, None
 
-    # --- Saving / loading (TF2 checkpoints) ---
+    
     def save(self, ckpt_dir: str, max_to_keep: int = 3):
         os.makedirs(ckpt_dir, exist_ok=True)
         ckpt = tf.train.Checkpoint(
